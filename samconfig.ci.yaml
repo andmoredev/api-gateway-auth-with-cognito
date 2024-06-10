@@ -1,0 +1,14 @@
+version: 0.1
+default:
+  build:
+    parameters:
+      cached: 'true'
+      parallel: 'true'
+
+  deploy:
+    parameters:
+      stack_name: api-gateway-auth-with-cognito
+      capabilities: CAPABILITY_IAM
+      image_repositories: []
+      parameter_overrides: [
+      ]

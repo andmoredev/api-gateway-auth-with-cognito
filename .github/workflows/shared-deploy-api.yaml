@@ -1,0 +1,65 @@
+name: Deploy API
+
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+        required: true
+        type: string
+      AWS_REGION:
+        required: true
+        type: string
+    outputs:
+      API_BASE_URL:
+        value: ${{ jobs.deploy.outputs.API_BASE_URL }}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
+    outputs:
+      API_BASE_URL: ${{ steps.getStackOutputs.outputs.API_BASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.PIPELINE_EXECUTION_ROLE }}
+          role-session-name: sam-deploy
+          role-duration-seconds: 3600
+          role-skip-session-tagging: true
+
+      - name: SAM Build and Deploy
+        run: |
+          npm install -g esbuild
+          npm ci
+
+          sam --info
+
+          sam build \
+          --config-file samconfig.ci.yaml
+
+
+          sam deploy \
+          --config-file samconfig.ci.yaml \
+          --s3-bucket ${{ secrets.ARTIFACTS_BUCKET_NAME }} \
+          --no-fail-on-empty-changeset \
+          --role-arn ${{ secrets.CLOUDFORMATION_EXECUTION_ROLE }}
+
+      - id: getStackOutputs
+        name: Get Stack Outputs
+        run: |
+          stackOutputJson=$(aws cloudformation describe-stacks --output json --stack-name ${{inputs.STACK_NAME }} --query "Stacks[0].Outputs")
+          url=$(echo $stackOutputJson | jq -r '.[] | select(.OutputKey=="ApiURL") | .OutputValue')
+
+          echo "# API" >> $GITHUB_STEP_SUMMARY
+          echo "* API - $url" >> $GITHUB_STEP_SUMMARY
+
+          echo "API_BASE_URL=$url" >> $GITHUB_OUTPUT
