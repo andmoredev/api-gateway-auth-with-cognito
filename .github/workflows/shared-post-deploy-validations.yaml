@@ -20,9 +20,9 @@ jobs:
       - name: Test API
         env:
           COGNITO_URL: ${{ secrets.COGNITO_URL }}
-          COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
-          COGNITO_USERNAME: ${{ secrets.COGNITO_USERNAME }}
-          COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
+          CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+          USERNAME: ${{ secrets.COGNITO_USERNAME }}
+          PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
         run: |
           npm ci
 
