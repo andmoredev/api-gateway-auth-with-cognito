@@ -46,7 +46,6 @@ jobs:
           sam build \
           --config-file samconfig.ci.yaml
 
-
           sam deploy \
           --config-file samconfig.ci.yaml \
           --s3-bucket ${{ secrets.ARTIFACTS_BUCKET_NAME }} \
@@ -56,7 +55,7 @@ jobs:
       - id: getStackOutputs
         name: Get Stack Outputs
         run: |
-          stackOutputJson=$(aws cloudformation describe-stacks --output json --stack-name ${{inputs.STACK_NAME }} --query "Stacks[0].Outputs")
+          stackOutputJson=$(aws cloudformation describe-stacks --output json --stack-name api-gateway-auth-with-cognito --query "Stacks[0].Outputs")
           url=$(echo $stackOutputJson | jq -r '.[] | select(.OutputKey=="ApiURL") | .OutputValue')
 
           echo "# API" >> $GITHUB_STEP_SUMMARY
