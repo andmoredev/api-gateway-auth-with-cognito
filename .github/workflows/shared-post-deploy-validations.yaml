@@ -12,16 +12,18 @@ on:
 
 jobs:
   test-api:
-    name: Run Portman
+    name: Run Portman With USER_PASSWORD_AUTH
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - uses: actions/checkout@v4
       - name: Test API
+        env:
+          COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+          COGNITO_USERNAME: ${{ secrets.COGNITO_USERNAME }}
+          COGNITO_PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
         run: |
           npm ci
 
-          TOKEN_RESPONSE=$(curl --location '${{ secrets.COGNITOPOOL_URL }}/oauth2/token' --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=client_credentials' --data-urlencode 'client_id=${{ secrets.TEST_CLIENT_ID }}' --data-urlencode 'client_secret=${{ secrets.TEST_CLIENT_SECRET }}' --data-urlencode 'scope=${{ secrets.SCOPES }}' | jq -r '.access_token')
-          echo "PORTMAN_ACCESS_TOKEN=$TOKEN_RESPONSE" > ./portman/.env-portman
-
+          node ./portman/get-auth-token/user-password-auth.mjs
           npx @apideck/portman --cliOptionsFile portman/portman-cli.json --baseUrl ${{ inputs.BASE_URL }}

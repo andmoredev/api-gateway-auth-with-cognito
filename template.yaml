@@ -32,7 +32,7 @@ Resources:
       SupportedIdentityProviders:
         - COGNITO
       ExplicitAuthFlows:
-        - ALLOW_USER_SRP_AUTH
+        - ALLOW_USER_PASSWORD_AUTH
         - ALLOW_REFRESH_TOKEN_AUTH
 
   API:
@@ -77,9 +77,13 @@ Resources:
         Banner:
           - js=import { createRequire } from 'module'; const require = createRequire(import.meta.url);
         External:
-          - '@aws-sdk/client-secrets-manager'
+          - '@aws-sdk/*'
 
 Outputs:
   ApiURL:
     Description: API URL
     Value: !Sub https://${API}.execute-api.${AWS::Region}.amazonaws.com/api
+
+  CognitoUserPoolClient:
+    Description: Cognito User Pool Client
+    Value: !Ref CognitoUserPoolClient
