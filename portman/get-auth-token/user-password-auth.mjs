@@ -21,6 +21,7 @@ async function call(action, body) {
   return await axios(request)
     .then((result) => JSON.parse(result.data))
     .catch((error) => {
+      console.log('error', error);
       const _err = JSON.parse(error.response.data)
       const err = new Error()
       err.code = _err.__type
