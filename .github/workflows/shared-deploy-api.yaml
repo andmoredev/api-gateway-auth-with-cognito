@@ -9,9 +9,14 @@ on:
       AWS_REGION:
         required: true
         type: string
+      STACK_NAME:
+        required: true
+        type: string
     outputs:
       API_BASE_URL:
         value: ${{ jobs.deploy.outputs.API_BASE_URL }}
+      COGNITO_USER_POOL_CLIENT_ID:
+        value: ${{ jobs.deploy.outputs.COGNITO_USER_POOL_CLIENT_ID }}
 
 permissions:
   id-token: write
@@ -24,6 +29,7 @@ jobs:
     environment: ${{ inputs.ENVIRONMENT }}
     outputs:
       API_BASE_URL: ${{ steps.getStackOutputs.outputs.API_BASE_URL }}
+      COGNITO_USER_POOL_CLIENT_ID: ${{ steps.getStackOutputs.outputs.COGNITO_USER_POOL_CLIENT_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -55,10 +61,11 @@ jobs:
       - id: getStackOutputs
         name: Get Stack Outputs
         run: |
-          stackOutputJson=$(aws cloudformation describe-stacks --output json --stack-name api-gateway-auth-with-cognito --query "Stacks[0].Outputs")
+          stackOutputJson=$(aws cloudformation describe-stacks --output json --stack-name ${{ inputs.STACK_NAME }} --query "Stacks[0].Outputs")
           url=$(echo $stackOutputJson | jq -r '.[] | select(.OutputKey=="ApiURL") | .OutputValue')
-
-          echo "# API" >> $GITHUB_STEP_SUMMARY
+          cognitoUserPoolClientId=$(echo $stackOutputJson | jq -r '.[] | select(.OutputKey=="CognitoUserPoolClientId") | .OutputValue')
+          echo "# Resource Summary" >> $GITHUB_STEP_SUMMARY
           echo "* API - $url" >> $GITHUB_STEP_SUMMARY
-
+          echo "* Cognito User Pool Client ID - $cognitoUserPoolClientId" >> $GITHUB_STEP_SUMMARY
           echo "API_BASE_URL=$url" >> $GITHUB_OUTPUT
+          echo "COGNITO_USER_POOL_CLIENT_ID=$cognitoUserPoolClientId" >> $GITHUB_OUTPUT
