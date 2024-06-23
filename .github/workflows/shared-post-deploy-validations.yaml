@@ -9,7 +9,7 @@ on:
       BASE_URL:
         type: string
         required: true
-      COGNITO_USER_POOL_CLIENT_ID:
+      COGNITO_USER_POOL_ID:
         type: string
         required: true
       USERNAME:
@@ -33,9 +33,9 @@ jobs:
 
       - name: Create Test User
         run: |
-          aws cognito-idp admin-create-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_CLIENT_ID }} --username ${{ inputs.USERNAME }}
-          aws cognito-idp admin-set-user-password --user-pool-id ${{ inputs.COGNITO_USER_POOL_CLIENT_ID }} --username ${{ inputs.USERNAME }} --password Password123! --permanent
-          # aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_CLIENT_ID }} --username ${{ inputs.USERNAME }}
+          aws cognito-idp admin-create-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username ${{ inputs.USERNAME }}
+          aws cognito-idp admin-set-user-password --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username ${{ inputs.USERNAME }} --password Password123! --permanent
+          # aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username ${{ inputs.USERNAME }}
 
   test-api:
     name: Run Portman With USER_PASSWORD_AUTH

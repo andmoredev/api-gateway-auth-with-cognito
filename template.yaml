@@ -84,6 +84,6 @@ Outputs:
     Description: API URL
     Value: !Sub https://${API}.execute-api.${AWS::Region}.amazonaws.com/api
 
-  CognitoUserPoolClientId:
-    Description: Cognito User Pool Client Id
-    Value: !Ref CognitoUserPoolClient
+  CognitoUserPoolId:
+    Description: Cognito User Pool Id
+    Value: !Ref CognitoUserPoolId
