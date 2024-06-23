@@ -13,9 +13,6 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  STACK_NAME: api-gateway-auth-with-cognito
-
 jobs:
   predeploy-validations:
     name: Pre-deploy validations
@@ -28,7 +25,7 @@ jobs:
     with:
       ENVIRONMENT: sandbox
       AWS_REGION: us-east-1
-      STACK_NAME: $STACK_NAME
+      STACK_NAME: api-gateway-auth-with-cognito
     secrets: inherit
 
   postdeploy-validations:
@@ -39,7 +36,7 @@ jobs:
       ENVIRONMENT: sandbox
       BASE_URL: ${{ needs.deploy.outputs.API_BASE_URL }}
       COGNITO_USER_POOL_CLIENT_ID: ${{ needs.deploy.outputs.COGNITO_USER_POOL_CLIENT_ID }}
-      USERNAME: $STACK_NAME@andmoredev.com
+      USERNAME: api-gateway-auth-with-cognito@andmoredev.com
     secrets: inherit
 
   auto-merge-dependabot-update:
