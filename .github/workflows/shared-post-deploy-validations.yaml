@@ -33,9 +33,9 @@ jobs:
 
       - name: Create Test User
         run: |
-          aws cognito-idp admin-create-user --user-pool-${{ inputs.COGNITO_USER_POOL_CLIENT_ID }} --username ${{ inputs.USERNAME }}
-          aws cognito-idp admin-set-user-password --user-pool-${{ inputs.COGNITO_USER_POOL_CLIENT_ID }} --username ${{ inputs.USERNAME }} --password Password123! --permanent
-          # aws cognito-idp admin-delete-user --user-pool-${{ inputs.COGNITO_USER_POOL_CLIENT_ID }} --username ${{ inputs.USERNAME }}
+          aws cognito-idp admin-create-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_CLIENT_ID }} --username ${{ inputs.USERNAME }}
+          aws cognito-idp admin-set-user-password --user-pool-id ${{ inputs.COGNITO_USER_POOL_CLIENT_ID }} --username ${{ inputs.USERNAME }} --password Password123! --permanent
+          # aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_CLIENT_ID }} --username ${{ inputs.USERNAME }}
 
   test-api:
     name: Run Portman With USER_PASSWORD_AUTH
