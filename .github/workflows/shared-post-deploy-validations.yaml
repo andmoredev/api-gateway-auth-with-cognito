@@ -55,3 +55,8 @@ jobs:
 
           node ./portman/get-auth-token/user-password-auth.mjs
           npx @apideck/portman --cliOptionsFile portman/portman-cli.json --baseUrl ${{ inputs.BASE_URL }}
+
+      - name: Delete Test User
+        run: |
+          aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $username
+
