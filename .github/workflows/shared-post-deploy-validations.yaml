@@ -72,7 +72,8 @@ jobs:
           export-env: false
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          SECRET: op://Dev Secrets/api-gateway-auth-with-cognito/password
+          USERNAME: op://Dev Secrets/api-gateway-auth-with-cognito/username
+          PASSWORD: op://Dev Secrets/api-gateway-auth-with-cognito/password
 
       - name: Test API
         env:
