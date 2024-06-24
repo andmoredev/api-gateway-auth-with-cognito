@@ -35,11 +35,13 @@ jobs:
 
       - name: Create Test User
         run: |
-          echo "USERNAME=$(uuidgen)@andmore.dev" >> $GITHUB_ENV;
-          echo "PASSWORD=$(uuidgen)" >> $GITHUB_ENV;
-          aws cognito-idp admin-create-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $USERNAME
-          aws cognito-idp admin-set-user-password --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $USERNAME --password $PASSWORD --permanent
-          # aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $USERNAME
+          username=$(uuidgen)@andmore.dev
+          password=$(uuidgen)
+          echo "USERNAME=$username" >> $GITHUB_ENV;
+          echo "PASSWORD=$password" >> $GITHUB_ENV;
+          aws cognito-idp admin-create-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $username
+          aws cognito-idp admin-set-user-password --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $username  --password $password --permanent
+          # aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $username
 
 
       - name: Test API
