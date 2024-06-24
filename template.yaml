@@ -39,7 +39,7 @@ Resources:
     Type: AWS::Cognito::UserPoolUser
     Properties:
       UserPoolId: !Ref CognitoUserPoolId
-      Username: aaa@andmore.dev
+      Username:  !Sub ${AWS::StackName}@andmore.dev
 
   API:
     Type: AWS::Serverless::Api
