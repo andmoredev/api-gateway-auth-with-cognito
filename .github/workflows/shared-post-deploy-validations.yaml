@@ -48,8 +48,6 @@ jobs:
         env:
           COGNITO_URL: ${{ secrets.COGNITO_URL }}
           CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
-          # USERNAME: ${{ secrets.COGNITO_USERNAME }}
-          # PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
         run: |
           npm ci
 
@@ -58,5 +56,5 @@ jobs:
 
       - name: Delete Test User
         run: |
-          aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $username
+          aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $USERNAME
 
