@@ -22,6 +22,16 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
+
+
+
+  test-api:
+    name: Run Portman With USER_PASSWORD_AUTH
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
+    steps:
+      - uses: actions/checkout@v4
+
       - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -33,23 +43,19 @@ jobs:
 
       - name: Create Test User
         run: |
-          username=$(uuidgen)@andmore.dev;
-          aws cognito-idp admin-create-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $username
-          aws cognito-idp admin-set-user-password --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $username --password Password123! --permanent
-          # aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $username
+          echo "USERNAME=$(uuidgen)@andmore.dev" >> $GITHUB_ENV;
+          echo "PASSWORD=$(uuidgen)" >> $GITHUB_ENV;
+          aws cognito-idp admin-create-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $USERNAME
+          aws cognito-idp admin-set-user-password --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $USERNAME --password $PASSWORD --permanent
+          # aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $USERNAME
 
-  test-api:
-    name: Run Portman With USER_PASSWORD_AUTH
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.ENVIRONMENT }}
-    steps:
-      - uses: actions/checkout@v4
+
       - name: Test API
         env:
           COGNITO_URL: ${{ secrets.COGNITO_URL }}
           CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
-          USERNAME: ${{ secrets.COGNITO_USERNAME }}
-          PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
+          # USERNAME: ${{ secrets.COGNITO_USERNAME }}
+          # PASSWORD: ${{ secrets.COGNITO_PASSWORD }}
         run: |
           npm ci
 
