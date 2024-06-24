@@ -69,7 +69,7 @@ jobs:
         id: op-load-secret
         uses: 1password/load-secrets-action@v1
         with:
-          export-env: false
+          export-env: true
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           USERNAME: op://Dev Secrets/api-gateway-auth-with-cognito/username
