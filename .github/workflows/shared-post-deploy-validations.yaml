@@ -67,7 +67,7 @@ jobs:
 
       - name: Load secret
         id: op-load-secret
-        uses: 1password/load-secrets-action@v1
+        uses: 1password/load-secrets-action@v2
         with:
           export-env: true
         env:
