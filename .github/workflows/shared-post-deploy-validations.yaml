@@ -12,10 +12,6 @@ on:
       COGNITO_USER_POOL_ID:
         type: string
         required: true
-      USERNAME:
-        type: string
-        required: true
-
 jobs:
   test-api-with-user-password-auth-inline-create-user:
     name: Run Portman With USER_PASSWORD_AUTH - Inline Create User
