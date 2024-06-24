@@ -17,14 +17,6 @@ on:
         required: true
 
 jobs:
-  create-test-user:
-    name: Create Test User
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.ENVIRONMENT }}
-    steps:
-
-
-
   test-api:
     name: Run Portman With USER_PASSWORD_AUTH
     runs-on: ubuntu-latest
