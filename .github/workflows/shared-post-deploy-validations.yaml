@@ -9,14 +9,93 @@ on:
       BASE_URL:
         type: string
         required: true
-
+      COGNITO_USER_POOL_ID:
+        type: string
+        required: true
 jobs:
-  test-api:
-    name: Run Portman With USER_PASSWORD_AUTH
+  test-api-with-user-password-auth-inline-create-user:
+    name: Run Portman With USER_PASSWORD_AUTH - Inline Create User
     runs-on: ubuntu-latest
     environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.PIPELINE_EXECUTION_ROLE }}
+          role-session-name: create-test-user
+          role-duration-seconds: 3600
+          role-skip-session-tagging: true
+
+      - name: Create Test User
+        run: |
+          username=$(uuidgen)@andmore.dev
+          password=$(uuidgen)G1%
+          echo "USERNAME=$username" >> $GITHUB_ENV;
+          echo "PASSWORD=$password" >> $GITHUB_ENV;
+          aws cognito-idp admin-create-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $username --message-action SUPPRESS
+          aws cognito-idp admin-set-user-password --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $username  --password $password --permanent
+
+      - name: Test API
+        env:
+          COGNITO_URL: ${{ secrets.COGNITO_URL }}
+          CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+        run: |
+          npm ci
+
+          node ./portman/get-auth-token/user-password-auth.mjs
+          npx @apideck/portman --cliOptionsFile portman/portman-cli.json --baseUrl ${{ inputs.BASE_URL }}
+
+      - name: Delete Test User
+        run: |
+          aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $USERNAME
+
+  test-api-with-user-password-auth-1password:
+    name: Run Portman With USER_PASSWORD_AUTH - Load from 1Password
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Load secret
+        id: op-load-secret
+        uses: 1password/load-secrets-action@v2
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          USERNAME: op://Dev Secrets/api-gateway-auth-with-cognito/username
+          PASSWORD: op://Dev Secrets/api-gateway-auth-with-cognito/password
+
+      - name: Test API
+        env:
+          COGNITO_URL: ${{ secrets.COGNITO_URL }}
+          CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+        run: |
+          npm ci
+
+          node ./portman/get-auth-token/user-password-auth.mjs
+          npx @apideck/portman --cliOptionsFile portman/portman-cli.json --baseUrl ${{ inputs.BASE_URL }}
+
+
+  test-api-with-user-password-auth-github-secrets:
+    name: Run Portman With USER_PASSWORD_AUTH - Load GitHub Secrets
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ENVIRONMENT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.PIPELINE_EXECUTION_ROLE }}
+          role-session-name: create-test-user
+          role-duration-seconds: 3600
+          role-skip-session-tagging: true
+
       - name: Test API
         env:
           COGNITO_URL: ${{ secrets.COGNITO_URL }}
@@ -28,3 +107,4 @@ jobs:
 
           node ./portman/get-auth-token/user-password-auth.mjs
           npx @apideck/portman --cliOptionsFile portman/portman-cli.json --baseUrl ${{ inputs.BASE_URL }}
+

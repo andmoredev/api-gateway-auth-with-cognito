@@ -13,9 +13,6 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  BRANCH_NAME: ${{ github.event_name == 'workflow_dispatch' && github.ref_name || github.event_name == 'pull_request' && github.head_ref }}
-
 jobs:
   predeploy-validations:
     name: Pre-deploy validations
@@ -28,6 +25,7 @@ jobs:
     with:
       ENVIRONMENT: sandbox
       AWS_REGION: us-east-1
+      STACK_NAME: api-gateway-auth-with-cognito
     secrets: inherit
 
   postdeploy-validations:
@@ -37,6 +35,7 @@ jobs:
     with:
       ENVIRONMENT: sandbox
       BASE_URL: ${{ needs.deploy.outputs.API_BASE_URL }}
+      COGNITO_USER_POOL_ID: ${{ needs.deploy.outputs.COGNITO_USER_POOL_ID }}
     secrets: inherit
 
   auto-merge-dependabot-update:

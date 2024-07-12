@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "mocha \"./**/tests/*.mjs\"",
-    "coverage": "c8 npm test",
+    "coverage": "c8 --exclude \"src/functions/**/tests/*.mjs\" npm test",
     "lint": "eslint {**,.}/*.mjs --no-error-on-unmatched-pattern",
     "lint-api": "spectral lint openapi.yaml",
     "portman": "portman --cliOptionsFile portman/portman-cli.json"

@@ -50,6 +50,14 @@ Resources:
           Parameters:
             Location: ./openapi.yaml
 
+  EchoLogGroup:
+    Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${EchoFunction}
+      RetentionInDays: 7
+
   EchoFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -84,6 +92,6 @@ Outputs:
     Description: API URL
     Value: !Sub https://${API}.execute-api.${AWS::Region}.amazonaws.com/api
 
-  CognitoUserPoolClient:
-    Description: Cognito User Pool Client
-    Value: !Ref CognitoUserPoolClient
+  CognitoUserPoolId:
+    Description: Cognito User Pool Id
+    Value: !Ref CognitoUserPoolId
