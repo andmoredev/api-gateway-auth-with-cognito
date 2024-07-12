@@ -35,12 +35,6 @@ Resources:
         - ALLOW_USER_PASSWORD_AUTH
         - ALLOW_REFRESH_TOKEN_AUTH
 
-  TestUser:
-    Type: AWS::Cognito::UserPoolUser
-    Properties:
-      UserPoolId: !Ref CognitoUserPoolId
-      Username:  !Sub ${AWS::StackName}@andmore.dev
-
   API:
     Type: AWS::Serverless::Api
     Properties:
@@ -93,7 +87,3 @@ Outputs:
   CognitoUserPoolId:
     Description: Cognito User Pool Id
     Value: !Ref CognitoUserPoolId
-
-  TestUserName:
-    Description: Test User Name
-    Value: !Ref TestUser
