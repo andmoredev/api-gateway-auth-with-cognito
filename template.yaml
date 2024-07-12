@@ -50,6 +50,14 @@ Resources:
           Parameters:
             Location: ./openapi.yaml
 
+  EchoLogGroup:
+    Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${EchoFunction}
+      RetentionInDays: 7
+
   EchoFunction:
     Type: AWS::Serverless::Function
     Properties:
