@@ -4,3 +4,4 @@ samconfig.yaml
 collection.postman.json
 portman/.env-portman
 tmp/
+notes.txt

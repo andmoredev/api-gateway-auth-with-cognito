@@ -52,34 +52,6 @@ jobs:
         run: |
           aws cognito-idp admin-delete-user --user-pool-id ${{ inputs.COGNITO_USER_POOL_ID }} --username $USERNAME
 
-  test-api-with-user-password-auth-1password:
-    name: Run Portman With USER_PASSWORD_AUTH - Load from 1Password
-    runs-on: ubuntu-latest
-    environment: ${{ inputs.ENVIRONMENT }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Load secret
-        id: op-load-secret
-        uses: 1password/load-secrets-action@v2
-        with:
-          export-env: true
-        env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          USERNAME: op://Dev Secrets/api-gateway-auth-with-cognito/username
-          PASSWORD: op://Dev Secrets/api-gateway-auth-with-cognito/password
-
-      - name: Test API
-        env:
-          COGNITO_URL: ${{ secrets.COGNITO_URL }}
-          CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
-        run: |
-          npm ci
-
-          node ./portman/get-auth-token/user-password-auth.mjs
-          npx @apideck/portman --cliOptionsFile portman/portman-cli.json --baseUrl ${{ inputs.BASE_URL }}
-
-
   test-api-with-user-password-auth-github-secrets:
     name: Run Portman With USER_PASSWORD_AUTH - Load GitHub Secrets
     runs-on: ubuntu-latest
@@ -107,4 +79,5 @@ jobs:
 
           node ./portman/get-auth-token/user-password-auth.mjs
           npx @apideck/portman --cliOptionsFile portman/portman-cli.json --baseUrl ${{ inputs.BASE_URL }}
+
 
