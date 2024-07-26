@@ -20,6 +20,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.PIPELINE_EXECUTION_ROLE }}
+          role-session-name: create-test-user
+          role-duration-seconds: 3600
+          role-skip-session-tagging: true
+
       - name: Create Test User
         run: |
           username=$(uuidgen)@andmore.dev
