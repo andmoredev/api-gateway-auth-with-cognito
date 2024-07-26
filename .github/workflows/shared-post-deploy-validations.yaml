@@ -20,15 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: us-east-1
-          role-to-assume: ${{ secrets.PIPELINE_EXECUTION_ROLE }}
-          role-session-name: create-test-user
-          role-duration-seconds: 3600
-          role-skip-session-tagging: true
-
       - name: Create Test User
         run: |
           username=$(uuidgen)@andmore.dev
@@ -59,15 +50,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: us-east-1
-          role-to-assume: ${{ secrets.PIPELINE_EXECUTION_ROLE }}
-          role-session-name: create-test-user
-          role-duration-seconds: 3600
-          role-skip-session-tagging: true
-
       - name: Test API
         env:
           COGNITO_URL: ${{ secrets.COGNITO_URL }}
@@ -79,5 +61,3 @@ jobs:
 
           node ./portman/get-auth-token/user-password-auth.mjs
           npx @apideck/portman --cliOptionsFile portman/portman-cli.json --baseUrl ${{ inputs.BASE_URL }}
-
-
