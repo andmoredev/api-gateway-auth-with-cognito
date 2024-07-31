@@ -1,5 +1,10 @@
-Repository used as an example for the [Drop the layers, bundle up with ESBuild instead](https://andmore.dev/layerless-esbuild-lambda) article.
-**Update** - This includes authentication now. This is all explained in [Secure API Gateway with Amazon Cognito using SAM](https://andmore.dev/api-cognito).
+# Summary
+In this repository you will find the different ways you can setup API Gateway with Cognito using SAM.
+
+Here is a list of the posts that reference this repository:
+
+1. [Secure API Gateway with Amazon Cognito using SAM](https://www.andmore.dev/blog/api-cognito/) - this post talks about basic concepts around authentication and has an example of using machine to machine authentication (I've removed this from the deployment to avoid generating any cost).
+1. [Using Amazon Cognito with the user-password flow](https://www.andmore.dev/blog/api-cognito-user-password) - we cover the user-password flow. How to set it up and use it to authenticate in Postman and programatically.
 
 # Deploy using the SAM CLI
 ## Clone/fork the repository
