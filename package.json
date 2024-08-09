@@ -23,6 +23,6 @@
     "chai": "^5.1.1",
     "eslint": "^9.8.0",
     "eslint-config-google": "^0.14.0",
-    "mocha": "^10.7.0"
+    "mocha": "^10.7.3"
   }
 }
