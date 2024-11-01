@@ -17,11 +17,11 @@
     "@middy/core": "^5.5.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.13.0",
+    "@eslint/js": "^9.14.0",
     "axios": "^1.7.7",
     "c8": "^10.1.2",
     "chai": "^5.1.2",
-    "eslint": "^9.13.0",
+    "eslint": "^9.14.0",
     "eslint-config-google": "^0.14.0",
     "mocha": "^10.8.2"
   }
