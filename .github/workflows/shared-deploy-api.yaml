@@ -67,5 +67,6 @@ jobs:
           echo "# Resource Summary" >> $GITHUB_STEP_SUMMARY
           echo "* API - $url" >> $GITHUB_STEP_SUMMARY
           echo "* Cognito User Pool Client ID - $cognitoUserPoolId" >> $GITHUB_STEP_SUMMARY
+
           echo "API_BASE_URL=$url" >> $GITHUB_OUTPUT
           echo "COGNITO_USER_POOL_ID=$cognitoUserPoolId" >> $GITHUB_OUTPUT
